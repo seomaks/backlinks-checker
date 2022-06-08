@@ -1,11 +1,13 @@
 import React from 'react';
-import LinksLoader from "./components/links-checker/links-checker";
+import {LinksChecker} from "./components/links-checker/links-checker";
+import {Selector} from "./components/selector/selector";
 
 function App() {
 
   return (
     <div>
-      <LinksLoader />
+      <Selector />
+      <LinksChecker />
     </div>
   );
 }

@@ -1,0 +1,12 @@
+.selector {
+    display: flex;
+    position: relative;
+    width: 100%;
+    justify-content: center;
+}
+
+.items {
+    width: 200px;
+    padding: 20px 40px;
+}
+
