@@ -31,9 +31,10 @@ export const setStatusCodeAC = (statusCode: number) => ({type: 'APP/SET-STATUS-C
 export const statusCodeTC = (link: string) => async (dispatch: Dispatch) => {
   const res = await getStatusAPI.getRequest(link)
     .then(result => {
+      console.log(result)
       return result
     })
-  dispatch(setStatusCodeAC(res.status))
+  dispatch(setStatusCodeAC(res.data.status.http_code))
 }
 
 
