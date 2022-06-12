@@ -1,4 +1,5 @@
 import axios from "axios";
+import {linksType} from "../state/app-reducer";
 
 const instance = axios.create({
   withCredentials: true
@@ -6,9 +7,10 @@ const instance = axios.create({
 
 // api
 export const getStatusAPI = {
-  async getRequest(link: string) {
-    return instance.get(`https://api.allorigins.win/get?url=${link}`)
-      // .then((res) => console.log(res.status))
-      // .catch((error) => console.log(error.message))
+  async getRequest(links: linksType) {
+    return links.map(link => instance.get(`https://api.allorigins.win/get?url=${link}`)
+      .then(res => res
+      )
+    )
   }
 }
