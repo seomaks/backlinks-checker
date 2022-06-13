@@ -1,5 +1,5 @@
 import axios from "axios";
-import {linksType} from "../state/app-reducer";
+import {LinksType} from "../state/app-reducer";
 
 const instance = axios.create({
   withCredentials: true
@@ -7,10 +7,8 @@ const instance = axios.create({
 
 // api
 export const getStatusAPI = {
-  async getRequest(links: linksType) {
+  async getRequest(links: LinksType) {
     return links.map(link => instance.get(`https://api.allorigins.win/get?url=${link}`)
-      .then(res => res
-      )
     )
   }
 }

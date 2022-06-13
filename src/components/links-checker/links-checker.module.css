@@ -1,0 +1,19 @@
+.linksChecker {
+    display: flex;
+    width: 100%;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.row {
+    display: flex;
+    align-items: center;
+}
+
+.displayChecker {
+align-self: center;
+}
+
+.dataMonitor {
+    width: 100%;
+}
