@@ -11,6 +11,7 @@ import {
 import {useSelector} from "react-redux";
 import {AppRootStateType} from "../../state/store";
 import {
+  EntriesType,
   LinksType,
   StatusCodesType
 } from "../../state/app-reducer";
@@ -18,6 +19,7 @@ import {
 export const DataMonitor = () => {
   const entities = useSelector<AppRootStateType, LinksType>(state => state.app.entities)
   const statusCodes = useSelector<AppRootStateType, StatusCodesType>(state => state.app.statusCodes)
+  const googleResults = useSelector<AppRootStateType, Array<EntriesType>>(state => state.app.googleResults)
 
   const [data, setData] = useState<Array<any>>([
     [{'URL': '', 'Status code': 0, 'Link': '', 'Google Index': ''}]
@@ -48,7 +50,7 @@ export const DataMonitor = () => {
                 <TableCell align="right">{entities.map((entity, index) => <p key={index}>{entity}</p>)}</TableCell>
                 <TableCell align="right">{statusCodes.map((statusCode, index) => <p key={index}>{statusCode}</p>)}</TableCell>
                 <TableCell align="right">{row.carbs}</TableCell>
-                <TableCell align="right">{row.protein}</TableCell>
+                <TableCell align="right">{googleResults.map((gRes, index) => <p key={index}>{gRes.link}</p>)}</TableCell>
               </TableRow>
             ))}
           </TableBody>
