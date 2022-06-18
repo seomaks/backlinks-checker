@@ -2,6 +2,7 @@ import axios from "axios";
 import {LinksType} from "../state/app-reducer";
 
 const API_KEY = process.env.REACT_APP_RAPID_API_KEY
+//const API_KEY2 = process.env.REACT_APP_RAPID_API_KEY
 
 const instance = axios.create({
   headers: {
@@ -12,7 +13,7 @@ const instance = axios.create({
 });
 
 export const searchAPI = {
-  async getRequest(links: LinksType, pageSize: number) {
-    return links.map(link => instance.get(`${`https://google-search3.p.rapidapi.com/api/v1/search/q=`}${link}&num=${pageSize}`))
+  async getRequest(links: LinksType) {
+    return links.map(link => instance.get(`${`https://google-search3.p.rapidapi.com/api/v1/search/q=`}${link}&num=${10}`))
       .map(res => res)}
 }

@@ -6,7 +6,6 @@ import TextField from '@mui/material/TextField';
 import {useDispatch, useSelector} from "react-redux";
 import {AppRootStateType} from "../../state/store";
 import {
-  indexingTC,
   LinksType,
   setLinksAC,
   statusCodeTC
@@ -16,6 +15,7 @@ export const LinksChecker = () => {
   const dispatch = useDispatch()
   const links = useSelector<AppRootStateType, LinksType>(state => state.app.links)
 
+
   const setItems = (e: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
     let links = (e.currentTarget.value).split('\n')
     dispatch(setLinksAC(links))
@@ -23,7 +23,7 @@ export const LinksChecker = () => {
 
   const addItem = () => {
     dispatch(statusCodeTC(links) as any)
-    dispatch(indexingTC(links, 10) as any)
+    // dispatch(indexingTC(links, 10) as any)
   }
 
   return (

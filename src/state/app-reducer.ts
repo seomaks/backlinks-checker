@@ -8,8 +8,7 @@ const initialState = {
   links: [] as LinksType,
   entities: [] as LinksType,
   statusCodes: [] as StatusCodesType,
-  pageSize: 10,
-  isIndexing: [] as Array<boolean>,
+  isIndexing: [] as Array<any>,
   googleResults: [] as Array<EntriesType>
 }
 
@@ -24,7 +23,7 @@ export const appReducer = (state: InitialStateType = initialState, action: AppAc
     case 'APP/SET-ENTITIES':
       return {...state, entities: [...action.entities]}
     case 'APP/SET-STATUS-CODE':
-      return {...state, statusCodes: [...action.statusCodes]}
+      return {...state, statusCodes: action.statusCodes}
     case 'APP/CHECK-GOOGLE-INDEX':
       return {...state, isIndexing: [...action.isIndexing]}
     case 'APP/SET-GOOGLE-RESULTS':
@@ -50,7 +49,7 @@ export const setEntitiesAC = (entities: LinksType) => ({
 export const setStatusCodeAC = (statusCodes: StatusCodesType) => ({
   type: 'APP/SET-STATUS-CODE', statusCodes
 } as const)
-export const checkIndexingAC = (isIndexing: Array<boolean>) => ({
+export const checkIndexingAC = (isIndexing: Array<any>) => ({
   type: 'APP/CHECK-GOOGLE-INDEX', isIndexing
 } as const)
 export const isGoogleResultsAC = (googleResults: Array<EntriesType>) =>
@@ -58,43 +57,50 @@ export const isGoogleResultsAC = (googleResults: Array<EntriesType>) =>
 
 // thunks
 export const statusCodeTC = (links: LinksType) => async (dispatch: Dispatch) => {
-  try {
-    dispatch(isStatusAC('loading'))
-    let httpCodes = await getStatusAPI.getRequest(links)
-      .then(results => results.map(
-          response => response
-            .then(res => res.data.status.http_code)
-        )
+  dispatch(isStatusAC('loading'))
+  let siteRequest = await getStatusAPI.getRequest(links)
+    .then(results => results.map(response => response
+        .then(res => res)
       )
-    Promise.all(httpCodes)
-      .then(codes => dispatch(setStatusCodeAC(codes)))
-    let urls = await getStatusAPI.getRequest(links)
-      .then(results => results.map(
-          response => response
-            .then(res => res.data.status.url)
-        )
+    )
+
+  let googleRequest = await searchAPI.getRequest(links)
+    .then(results => results.map(response => response
+        .then(res => res)
       )
-    Promise.all(urls)
-      .then(urls => dispatch(setEntitiesAC(urls)))
-      .then(res => dispatch(isStatusAC('succeeded')))
-  } catch (err) {
-    console.log(err)
-  }
+    )
+
+  Promise.all(siteRequest)
+    .then(res => {
+      dispatch(setStatusCodeAC(res.map(res => res.data.status.http_code)))
+      dispatch(setEntitiesAC(res.map(res => res.data.status.url)))
+    })
+
+  Promise.all(googleRequest)
+    .then(res => {
+        let arr: any = []
+        res.map(res => {
+          for (let y = 0; y <= res.data.results.length; y++) {
+            if (res.data.results[y] === undefined) {
+              return arr.push('no 🤬')
+            }
+            else if (links.includes(res.data.results[y].link)) {
+              return arr.push('yes 😁')
+            } else {
+              return arr.push('no 🤬')
+            }
+          }
+          return arr
+        })
+        dispatch(checkIndexingAC(arr))
+        dispatch(isStatusAC('succeeded'))
+      }
+    )
+    .catch(err => {
+      console.log(err)
+    })
 }
 
-export const indexingTC = (links: LinksType, pageSize: number) => async (dispatch: Dispatch) => {
-  try {
-    dispatch(isStatusAC('loading'))
-    let googleResult = await searchAPI.getRequest(links, pageSize)
-      .then(results => results.map(
-        response => response
-          .then(res => dispatch(isGoogleResultsAC(res.data.results)))
-          .then(res => dispatch(isStatusAC('succeeded')))
-      ))
-  } catch (err) {
-    console.log(err)
-  }
-}
 
 // types
 export type EntriesType = {
@@ -121,4 +127,3 @@ export type AppActionsType =
   | SetEntitiesActionType
   | CheckIndexingActionType
   | IsGoogleResultsActionType
-
