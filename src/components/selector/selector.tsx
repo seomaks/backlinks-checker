@@ -31,6 +31,9 @@ export const Selector = () => {
         >
           <option value={'mightytips.info'}>mightytips.info</option>
           <option value={'mightytips.hu'}>mightytips.hu</option>
+          <option value={'mightytips.com.br'}>mightytips.com.br</option>
+          <option value={'mightytips.biz'}>mightytips.biz</option>
+          <option value={'seobrotherslv.com'}>seobrotherslv.com</option>
           <option value={project}>mightytips.com</option>
         </NativeSelect>
       </FormControl>

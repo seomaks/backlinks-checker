@@ -5,12 +5,12 @@ import {searchAPI} from "../api/google-index-api";
 const initialState = {
   status: 'idle' as RequestStatusType,
   project: 'mightytips.com',
-  links: [] as LinksType,
-  entities: [] as LinksType,
+  links: [] as EntitiesType,
+  entities: [] as EntitiesType,
   statusCodes: [] as StatusCodesType,
-  isIndexing: [] as Array<any>,
-  liveLinks: [] as Array<string>,
-  googleResults: [] as Array<EntriesType>
+  isIndexing: [] as EntitiesType,
+  liveLinks: [] as EntitiesType,
+  error: null as ErrorType,
 }
 
 export const appReducer = (state: InitialStateType = initialState, action: AppActionsType): InitialStateType => {
@@ -29,8 +29,8 @@ export const appReducer = (state: InitialStateType = initialState, action: AppAc
       return {...state, isIndexing: [...action.isIndexing]}
     case 'APP/LINK-IS-ALIVE':
       return {...state, liveLinks: [...action.liveLinks]}
-    case 'APP/SET-GOOGLE-RESULTS':
-      return {...state, googleResults: [...action.googleResults]}
+    case 'APP/SET-ERROR':
+      return {...state, error: action.error}
     default:
       return state
   }
@@ -43,26 +43,28 @@ export const isStatusAC = (status: RequestStatusType) => ({
 export const setProjectAC = (project: string) => ({
   type: 'APP/SET-PROJECT', project
 } as const)
-export const setLinksAC = (links: LinksType) => ({
+export const setLinksAC = (links: EntitiesType) => ({
   type: 'APP/SET-LINKS', links
 } as const)
-export const setEntitiesAC = (entities: LinksType) => ({
+export const setEntitiesAC = (entities: EntitiesType) => ({
   type: 'APP/SET-ENTITIES', entities
 } as const)
 export const setStatusCodeAC = (statusCodes: StatusCodesType) => ({
   type: 'APP/SET-STATUS-CODE', statusCodes
 } as const)
-export const checkIndexingAC = (isIndexing: Array<any>) => ({
+export const checkIndexingAC = (isIndexing: EntitiesType) => ({
   type: 'APP/CHECK-GOOGLE-INDEX', isIndexing
 } as const)
-export const liveLinksAC = (liveLinks: Array<string>) => ({
+export const liveLinksAC = (liveLinks: EntitiesType) => ({
   type: 'APP/LINK-IS-ALIVE', liveLinks
 } as const)
-export const isGoogleResultsAC = (googleResults: Array<EntriesType>) =>
-  ({type: 'APP/SET-GOOGLE-RESULTS', googleResults} as const)
+export const setAppErrorAC = (error: ErrorType) => ({
+  type: 'APP/SET-ERROR',
+  error
+} as const)
 
 // thunks
-export const statusCodeTC = (links: LinksType, project: string) => async (dispatch: Dispatch) => {
+export const statusCodeTC = (links: EntitiesType, project: string) => async (dispatch: Dispatch) => {
   dispatch(isStatusAC('loading'))
   let siteRequest = await getStatusAPI.getRequest(links)
     .then(results => results.map(response => response
@@ -78,35 +80,40 @@ export const statusCodeTC = (links: LinksType, project: string) => async (dispat
 
   Promise.all(siteRequest)
     .then(res => {
-      //  res.map(res => console.log(res.data.contents))
-      let arr: any = []
+      dispatch(isStatusAC('loading'))
+      const arr: any = []
       res.map(res => {
         if (res.data.contents === undefined) {
-          return arr.push('no 🤬')
+          return arr.push('Nope 🤬')
         } else if (res.data.contents.includes((project))) {
-          return arr.push('yes 😁')
+          return arr.push('Yep 😁')
         } else {
-          return arr.push('no 🤬')
+          return arr.push('Nope 🤬')
         }
-
         return arr
       })
       dispatch(liveLinksAC(arr))
       dispatch(setStatusCodeAC(res.map(res => res.data.status.http_code)))
       dispatch(setEntitiesAC(res.map(res => res.data.status.url)))
+      dispatch(isStatusAC('succeeded'))
+    })
+    .catch(err => {
+      console.log(err)
+      dispatch(setAppErrorAC(err.data.message))
     })
 
   Promise.all(googleRequest)
     .then(res => {
-        let arr: any = []
+        dispatch(isStatusAC('loading'))
+        const arr: any = []
         res.map(res => {
           for (let y = 0; y <= res.data.results.length; y++) {
             if (res.data.results[y] === undefined) {
-              return arr.push('no 🤬')
-            } else if (links.includes(res.data.results[y].link)) {
-              return arr.push('yes 😁')
+              return arr.push('Nope 🤬')
+            } else if (links.map(link => link.replace(/^https?\:\/\//i, "")).includes(res.data.results[y].link.replace(/^https?\:\/\//i, ""))) {
+              return arr.push('Yep 😁')
             } else {
-              return arr.push('no 🤬')
+              return arr.push('Nope 🤬')
             }
           }
           return arr
@@ -117,19 +124,15 @@ export const statusCodeTC = (links: LinksType, project: string) => async (dispat
     )
     .catch(err => {
       console.log(err)
+      dispatch(setAppErrorAC(err.data.message))
     })
 }
 
-
 // types
-export type EntriesType = {
-  description: string
-  link: string
-  title: string
-}
+export type ErrorType = string | null
 export type InitialStateType = typeof initialState
 export type RequestStatusType = 'idle' | 'loading' | 'succeeded' | 'failed'
-export type LinksType = Array<string>
+export type EntitiesType = Array<string>
 export type StatusCodesType = Array<number>
 export type IsStatusActionType = ReturnType<typeof isStatusAC>
 export type SetProjectActionType = ReturnType<typeof setProjectAC>
@@ -138,7 +141,7 @@ export type SetEntitiesActionType = ReturnType<typeof setEntitiesAC>
 export type SetStatusCodeActionType = ReturnType<typeof setStatusCodeAC>
 export type CheckIndexingActionType = ReturnType<typeof checkIndexingAC>
 export type LiveLinksActionType = ReturnType<typeof liveLinksAC>
-export type IsGoogleResultsActionType = ReturnType<typeof isGoogleResultsAC>
+export type SetAppErrorActionType = ReturnType<typeof setAppErrorAC>
 export type AppActionsType =
   SetStatusCodeActionType
   | SetLinksActionType
@@ -146,5 +149,5 @@ export type AppActionsType =
   | IsStatusActionType
   | SetEntitiesActionType
   | CheckIndexingActionType
-  | IsGoogleResultsActionType
   | LiveLinksActionType
+  | SetAppErrorActionType

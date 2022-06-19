@@ -11,15 +11,15 @@ import {
 import {useSelector} from "react-redux";
 import {AppRootStateType} from "../../state/store";
 import {
-  LinksType,
+  EntitiesType,
   StatusCodesType
 } from "../../state/app-reducer";
 
 export const DataMonitor = () => {
-  const entities = useSelector<AppRootStateType, LinksType>(state => state.app.entities)
+  const entities = useSelector<AppRootStateType, EntitiesType>(state => state.app.entities)
   const statusCodes = useSelector<AppRootStateType, StatusCodesType>(state => state.app.statusCodes)
-  const isIndexing = useSelector<AppRootStateType, Array<any>>(state => state.app.isIndexing)
-  const liveLinks = useSelector<AppRootStateType, Array<string>>(state => state.app.liveLinks)
+  const isIndexing = useSelector<AppRootStateType, EntitiesType>(state => state.app.isIndexing)
+  const liveLinks = useSelector<AppRootStateType, EntitiesType>(state => state.app.liveLinks)
 
   const [data, setData] = useState<Array<any>>([
     [{'URL': '', 'Status code': 0, 'Link': '', 'Google Index': ''}]
@@ -48,9 +48,9 @@ export const DataMonitor = () => {
                   {row.name}
                 </TableCell>
                 <TableCell align="right">{entities.map((entity, index) => <p key={index}>{entity}</p>)}</TableCell>
-                <TableCell align="right">{statusCodes.map((status, index) => <p key={index}>{status}</p>)}</TableCell>
-                <TableCell align="right">{liveLinks.map((link, index) => <p key={index}>{link}</p>)}</TableCell>
-                <TableCell align="right">{isIndexing.map((ind, index) => <p key={index}>{ind}</p>)}</TableCell>
+                <TableCell align="right">{statusCodes.map((status, index) =>status === 200 ? <p key={index}>{status}</p> : <p key={index} style={{color: "red"}}>{status}</p>)}</TableCell>
+                <TableCell align="right">{liveLinks.map((link, index) =>link === 'Yep 😁' ? <p key={index}>{link}</p> : <p key={index} style={{color: "red"}}>{link}</p>)}</TableCell>
+                <TableCell align="right">{isIndexing.map((ind, index) =>ind === 'Yep 😁' ? <p key={index}>{ind}</p> : <p key={index} style={{color: "red"}}>{ind}</p>)}</TableCell>
               </TableRow>
             ))}
           </TableBody>
