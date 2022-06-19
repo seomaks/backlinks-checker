@@ -9,6 +9,7 @@ const initialState = {
   entities: [] as LinksType,
   statusCodes: [] as StatusCodesType,
   isIndexing: [] as Array<any>,
+  liveLinks: [] as Array<string>,
   googleResults: [] as Array<EntriesType>
 }
 
@@ -26,6 +27,8 @@ export const appReducer = (state: InitialStateType = initialState, action: AppAc
       return {...state, statusCodes: action.statusCodes}
     case 'APP/CHECK-GOOGLE-INDEX':
       return {...state, isIndexing: [...action.isIndexing]}
+    case 'APP/LINK-IS-ALIVE':
+      return {...state, liveLinks: [...action.liveLinks]}
     case 'APP/SET-GOOGLE-RESULTS':
       return {...state, googleResults: [...action.googleResults]}
     default:
@@ -52,11 +55,14 @@ export const setStatusCodeAC = (statusCodes: StatusCodesType) => ({
 export const checkIndexingAC = (isIndexing: Array<any>) => ({
   type: 'APP/CHECK-GOOGLE-INDEX', isIndexing
 } as const)
+export const liveLinksAC = (liveLinks: Array<string>) => ({
+  type: 'APP/LINK-IS-ALIVE', liveLinks
+} as const)
 export const isGoogleResultsAC = (googleResults: Array<EntriesType>) =>
   ({type: 'APP/SET-GOOGLE-RESULTS', googleResults} as const)
 
 // thunks
-export const statusCodeTC = (links: LinksType) => async (dispatch: Dispatch) => {
+export const statusCodeTC = (links: LinksType, project: string) => async (dispatch: Dispatch) => {
   dispatch(isStatusAC('loading'))
   let siteRequest = await getStatusAPI.getRequest(links)
     .then(results => results.map(response => response
@@ -72,6 +78,20 @@ export const statusCodeTC = (links: LinksType) => async (dispatch: Dispatch) => 
 
   Promise.all(siteRequest)
     .then(res => {
+      //  res.map(res => console.log(res.data.contents))
+      let arr: any = []
+      res.map(res => {
+        if (res.data.contents === undefined) {
+          return arr.push('no 🤬')
+        } else if (res.data.contents.includes((project))) {
+          return arr.push('yes 😁')
+        } else {
+          return arr.push('no 🤬')
+        }
+
+        return arr
+      })
+      dispatch(liveLinksAC(arr))
       dispatch(setStatusCodeAC(res.map(res => res.data.status.http_code)))
       dispatch(setEntitiesAC(res.map(res => res.data.status.url)))
     })
@@ -83,8 +103,7 @@ export const statusCodeTC = (links: LinksType) => async (dispatch: Dispatch) => 
           for (let y = 0; y <= res.data.results.length; y++) {
             if (res.data.results[y] === undefined) {
               return arr.push('no 🤬')
-            }
-            else if (links.includes(res.data.results[y].link)) {
+            } else if (links.includes(res.data.results[y].link)) {
               return arr.push('yes 😁')
             } else {
               return arr.push('no 🤬')
@@ -118,6 +137,7 @@ export type SetLinksActionType = ReturnType<typeof setLinksAC>
 export type SetEntitiesActionType = ReturnType<typeof setEntitiesAC>
 export type SetStatusCodeActionType = ReturnType<typeof setStatusCodeAC>
 export type CheckIndexingActionType = ReturnType<typeof checkIndexingAC>
+export type LiveLinksActionType = ReturnType<typeof liveLinksAC>
 export type IsGoogleResultsActionType = ReturnType<typeof isGoogleResultsAC>
 export type AppActionsType =
   SetStatusCodeActionType
@@ -127,3 +147,4 @@ export type AppActionsType =
   | SetEntitiesActionType
   | CheckIndexingActionType
   | IsGoogleResultsActionType
+  | LiveLinksActionType

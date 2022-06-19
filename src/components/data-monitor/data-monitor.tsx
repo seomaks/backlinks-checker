@@ -19,6 +19,7 @@ export const DataMonitor = () => {
   const entities = useSelector<AppRootStateType, LinksType>(state => state.app.entities)
   const statusCodes = useSelector<AppRootStateType, StatusCodesType>(state => state.app.statusCodes)
   const isIndexing = useSelector<AppRootStateType, Array<any>>(state => state.app.isIndexing)
+  const liveLinks = useSelector<AppRootStateType, Array<string>>(state => state.app.liveLinks)
 
   const [data, setData] = useState<Array<any>>([
     [{'URL': '', 'Status code': 0, 'Link': '', 'Google Index': ''}]
@@ -48,7 +49,7 @@ export const DataMonitor = () => {
                 </TableCell>
                 <TableCell align="right">{entities.map((entity, index) => <p key={index}>{entity}</p>)}</TableCell>
                 <TableCell align="right">{statusCodes.map((status, index) => <p key={index}>{status}</p>)}</TableCell>
-                <TableCell align="right">{row.carbs}</TableCell>
+                <TableCell align="right">{liveLinks.map((link, index) => <p key={index}>{link}</p>)}</TableCell>
                 <TableCell align="right">{isIndexing.map((ind, index) => <p key={index}>{ind}</p>)}</TableCell>
               </TableRow>
             ))}

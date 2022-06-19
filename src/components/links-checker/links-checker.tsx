@@ -14,6 +14,7 @@ import {
 export const LinksChecker = () => {
   const dispatch = useDispatch()
   const links = useSelector<AppRootStateType, LinksType>(state => state.app.links)
+  const project = useSelector<AppRootStateType, string>(state => state.app.project)
 
 
   const setItems = (e: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
@@ -22,7 +23,7 @@ export const LinksChecker = () => {
   }
 
   const addItem = () => {
-    dispatch(statusCodeTC(links) as any)
+    dispatch(statusCodeTC(links, project) as any)
     // dispatch(indexingTC(links, 10) as any)
   }
 
