@@ -99,7 +99,7 @@ export const statusCodeTC = (links: EntitiesType, project: string) => async (dis
     })
     .catch(err => {
       console.log(err)
-      dispatch(setAppErrorAC(err.data.message))
+      dispatch(setAppErrorAC(err.message))
     })
 
   Promise.all(googleRequest)
@@ -124,7 +124,7 @@ export const statusCodeTC = (links: EntitiesType, project: string) => async (dis
     )
     .catch(err => {
       console.log(err)
-      dispatch(setAppErrorAC(err.data.message))
+      dispatch(setAppErrorAC(err.message))
     })
 }
 
