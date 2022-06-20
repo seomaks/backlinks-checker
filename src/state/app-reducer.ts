@@ -90,7 +90,6 @@ export const statusCodeTC = (links: EntitiesType, project: string) => async (dis
         } else {
           return arr.push('Nope 🤬')
         }
-        return arr
       })
       dispatch(liveLinksAC(arr))
       dispatch(setStatusCodeAC(res.map(res => res.data.status.http_code)))
@@ -116,7 +115,6 @@ export const statusCodeTC = (links: EntitiesType, project: string) => async (dis
               return arr.push('Nope 🤬')
             }
           }
-          return arr
         })
         dispatch(checkIndexingAC(arr))
         dispatch(isStatusAC('succeeded'))
