@@ -105,7 +105,7 @@ export const statusCodeTC = (links: EntitiesType, project: string) => async (dis
   Promise.all(googleRequest)
     .then(res => {
         dispatch(isStatusAC('loading'))
-        const arr: any = []
+        const arr: Array<string> = []
         res.map(res => {
           for (let y = 0; y <= res.data.results.length; y++) {
             if (res.data.results[y] === undefined) {
