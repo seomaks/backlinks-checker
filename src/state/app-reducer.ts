@@ -129,8 +129,8 @@ export const statusCodeTC = (links: EntitiesType, project: string) => async (dis
 }
 
 // types
-export type ErrorType = string | null
 export type InitialStateType = typeof initialState
+export type ErrorType = string | null
 export type RequestStatusType = 'idle' | 'loading' | 'succeeded' | 'failed'
 export type EntitiesType = Array<string>
 export type StatusCodesType = Array<number>
