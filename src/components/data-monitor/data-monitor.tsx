@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {FormEventHandler, useState} from 'react';
 import styles from './data-monitor.module.css'
 import {
   Paper,
@@ -27,6 +27,7 @@ export const DataMonitor = () => {
 
   return (
     <div className={styles.dataMonitor}>
+      <button>Download</button>
       <TableContainer component={Paper}>
         <Table sx={{minWidth: 650}} aria-label="simple table">
           <TableHead>
@@ -39,9 +40,9 @@ export const DataMonitor = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {data.map((row) => (
+            {data.map((row, index) => (
               <TableRow
-                key={row.name}
+                key={index}
                 sx={{'&:last-child td, &:last-child th': {border: 0}}}
               >
                 <TableCell component="th" scope="row">
