@@ -1,6 +1,7 @@
-import React, {FormEventHandler, useState} from 'react';
+import React, {useState} from 'react';
 import styles from './data-monitor.module.css'
 import {
+  Button,
   Paper,
   Table, TableBody,
   TableCell,
@@ -14,6 +15,7 @@ import {
   EntitiesType,
   StatusCodesType
 } from "../../state/app-reducer";
+import {utils, writeFile} from "xlsx";
 
 export const DataMonitor = () => {
   const entities = useSelector<AppRootStateType, EntitiesType>(state => state.app.entities)
@@ -25,9 +27,29 @@ export const DataMonitor = () => {
     [{'URL': '', 'Status code': 0, 'Link': '', 'Google Index': ''}]
   ])
 
+  const handleExport = () => {
+    const headings = [[
+      'URL',
+      'Status code',
+      'Link',
+      'Google index'
+    ]];
+    const wb = utils.book_new();
+    const ws = utils.json_to_sheet([]);
+    utils.sheet_add_aoa(ws, headings);
+    utils.sheet_add_json(ws, entities.map(entity=>[entity]), { origin: 'A2', skipHeader: true });
+    utils.sheet_add_json(ws, statusCodes.map(status=>[status]), { origin: 'B2', skipHeader: true });
+    utils.sheet_add_json(ws, liveLinks.map(link=>[link]), { origin: 'C2', skipHeader: true });
+    utils.sheet_add_json(ws, isIndexing.map(index=>[index]), { origin: 'D2', skipHeader: true });
+    utils.book_append_sheet(wb, ws, 'Report');
+    writeFile(wb, 'Backlinks report.xlsx');
+  }
+
   return (
     <div className={styles.dataMonitor}>
-      <button>Download</button>
+      <Button variant="contained" onClick={handleExport} className="btn btn-primary float-right">
+        Export <i className="fa fa-download"></i>
+      </Button>
       <TableContainer component={Paper}>
         <Table sx={{minWidth: 650}} aria-label="simple table">
           <TableHead>
