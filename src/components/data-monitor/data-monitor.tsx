@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import styles from './data-monitor.module.css'
 import {
   Button,
@@ -20,12 +20,15 @@ import {utils, writeFile} from "xlsx";
 export const DataMonitor = () => {
   const entities = useSelector<AppRootStateType, EntitiesType>(state => state.app.entities)
   const statusCodes = useSelector<AppRootStateType, StatusCodesType>(state => state.app.statusCodes)
-  const isIndexing = useSelector<AppRootStateType, EntitiesType>(state => state.app.isIndexing)
   const liveLinks = useSelector<AppRootStateType, EntitiesType>(state => state.app.liveLinks)
+  const isIndexing = useSelector<AppRootStateType, EntitiesType>(state => state.app.isIndexing)
 
-  const [data, setData] = useState<Array<any>>([
-    [{'URL': '', 'Status code': 0, 'Link': '', 'Google Index': ''}]
-  ])
+  const data: Array<any> = [{
+    entities,
+    statusCodes,
+    liveLinks,
+    isIndexing
+  }]
 
   const handleExport = () => {
     const headings = [[
@@ -47,9 +50,11 @@ export const DataMonitor = () => {
 
   return (
     <div className={styles.dataMonitor}>
+      <div className={styles.button}>
       <Button variant="contained" onClick={handleExport} className="btn btn-primary float-right">
-        Export <i className="fa fa-download"></i>
+        Export
       </Button>
+      </div>
       <TableContainer component={Paper}>
         <Table sx={{minWidth: 650}} aria-label="simple table">
           <TableHead>
