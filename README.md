@@ -20,5 +20,7 @@ Clone the repository and install the dependencies
 
 ### `yarn start`
 
-Start the frontend application locally
+Start the frontend application locally. 
+
+But you will need your own API key. You can get it here: https://rapidapi.com/
 
