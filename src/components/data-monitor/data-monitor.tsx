@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 import styles from './data-monitor.module.css'
 import {
   Button,
@@ -17,7 +17,7 @@ import {
 } from "../../state/app-reducer";
 import {utils, writeFile} from "xlsx";
 
-export const DataMonitor = () => {
+export const DataMonitor = React.memo(() => {
   const entities = useSelector<AppRootStateType, EntitiesType>(state => state.app.entities)
   const statusCodes = useSelector<AppRootStateType, StatusCodesType>(state => state.app.statusCodes)
   const liveLinks = useSelector<AppRootStateType, EntitiesType>(state => state.app.liveLinks)
@@ -30,7 +30,7 @@ export const DataMonitor = () => {
     isIndexing
   }]
 
-  const handleExport = () => {
+  const handleExport = useCallback(() => {
     const headings = [[
       'URL',
       'Status code',
@@ -46,7 +46,7 @@ export const DataMonitor = () => {
     utils.sheet_add_json(ws, isIndexing.map(index=>[index]), { origin: 'D2', skipHeader: true });
     utils.book_append_sheet(wb, ws, 'Report');
     writeFile(wb, 'Backlinks report.xlsx');
-  }
+  }, [entities, statusCodes, liveLinks, isIndexing])
 
   return (
     <div className={styles.dataMonitor}>
@@ -86,5 +86,5 @@ export const DataMonitor = () => {
       </TableContainer>
     </div>
   )
-}
+})
 

@@ -6,7 +6,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {AppRootStateType} from "../../state/store";
 import {setProjectAC} from "../../state/app-reducer";
 
-export const Selector = () => {
+export const Selector = React.memo(() => {
   const dispatch = useDispatch()
   const project = useSelector<AppRootStateType, string>(state => state.app.project)
 
@@ -39,4 +39,4 @@ export const Selector = () => {
       </FormControl>
     </div>
   </div>
-}
+})

@@ -1,4 +1,4 @@
-import React, {ChangeEvent} from 'react';
+import React, {ChangeEvent, useCallback} from 'react';
 import styles from './links-checker.module.css'
 import {Button} from "@mui/material";
 import Box from '@mui/material/Box';
@@ -11,20 +11,20 @@ import {
   statusCodeTC
 } from "../../state/app-reducer";
 
-export const LinksChecker = () => {
+export const LinksChecker = React.memo(() => {
   const dispatch = useDispatch()
   const links = useSelector<AppRootStateType, EntitiesType>(state => state.app.links)
   const project = useSelector<AppRootStateType, string>(state => state.app.project)
 
 
-  const setItems = (e: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
+  const setItems = useCallback((e: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
     let links = (e.currentTarget.value).split('\n')
     dispatch(setLinksAC(links))
-  }
+  },[dispatch])
 
-  const addItem = () => {
+  const addItem = useCallback(() => {
     dispatch(statusCodeTC(links, project) as any)
-  }
+  },[dispatch, links, project])
 
   return (
     <div className={styles.linksChecker}>
@@ -61,7 +61,7 @@ export const LinksChecker = () => {
       </div>
     </div>
   );
-}
+})
 
 
 
