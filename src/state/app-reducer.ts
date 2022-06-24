@@ -1,6 +1,7 @@
-import {Dispatch} from "redux";
 import {getStatusAPI} from "../api/status-code-api";
 import {searchAPI} from "../api/google-index-api";
+import {AuthActionsType} from "./auth-reducer";
+import {AppThunkType} from "./store";
 
 const initialState = {
   status: 'idle' as RequestStatusType,
@@ -64,7 +65,7 @@ export const setAppErrorAC = (error: ErrorType) => ({
 } as const)
 
 // thunks
-export const statusCodeTC = (links: EntitiesType, project: string) => async (dispatch: Dispatch) => {
+export const statusCodeTC = (links: EntitiesType, project: string): AppThunkType => async dispatch => {
   dispatch(isStatusAC('loading'))
   let siteRequest = await getStatusAPI.getRequest(links)
     .then(results => results.map(response => response
@@ -97,7 +98,6 @@ export const statusCodeTC = (links: EntitiesType, project: string) => async (dis
       dispatch(isStatusAC('succeeded'))
     })
     .catch(err => {
-      console.log(err)
       dispatch(setAppErrorAC(err.message))
     })
 
@@ -121,9 +121,17 @@ export const statusCodeTC = (links: EntitiesType, project: string) => async (dis
       }
     )
     .catch(err => {
-      console.log(err)
       dispatch(setAppErrorAC(err.message))
     })
+}
+
+export const dataResetTC = (): AppThunkType => dispatch => {
+  dispatch(setLinksAC([]))
+  dispatch(setEntitiesAC([]))
+  dispatch(setStatusCodeAC([]))
+  dispatch(checkIndexingAC([]))
+  dispatch(liveLinksAC([]))
+  dispatch(isStatusAC('idle'))
 }
 
 // types
@@ -149,3 +157,4 @@ export type AppActionsType =
   | CheckIndexingActionType
   | LiveLinksActionType
   | SetAppErrorActionType
+  | AuthActionsType
