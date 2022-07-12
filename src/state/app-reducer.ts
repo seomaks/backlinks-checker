@@ -81,7 +81,6 @@ export const statusCodeTC = (links: EntitiesType, project: string): AppThunkType
 
   Promise.all(siteRequest)
     .then(res => {
-      dispatch(isStatusAC('loading'))
       const arr: any = []
       res.map(res => {
         if (res.data.contents === undefined) {
@@ -95,7 +94,6 @@ export const statusCodeTC = (links: EntitiesType, project: string): AppThunkType
       dispatch(liveLinksAC(arr))
       dispatch(setStatusCodeAC(res.map(res => res.data.status.http_code)))
       dispatch(setEntitiesAC(res.map(res => res.data.status.url)))
-      dispatch(isStatusAC('succeeded'))
     })
     .catch(err => {
       dispatch(setAppErrorAC(err.message))
@@ -103,7 +101,6 @@ export const statusCodeTC = (links: EntitiesType, project: string): AppThunkType
 
   Promise.all(googleRequest)
     .then(res => {
-        dispatch(isStatusAC('loading'))
         const arr: Array<string> = []
         res.map(res => {
           for (let y = 0; y <= res.data.results.length; y++) {
@@ -117,12 +114,13 @@ export const statusCodeTC = (links: EntitiesType, project: string): AppThunkType
           }
         })
         dispatch(checkIndexingAC(arr))
-        dispatch(isStatusAC('succeeded'))
       }
     )
     .catch(err => {
       dispatch(setAppErrorAC(err.message))
     })
+    .finally(() => dispatch(isStatusAC('succeeded'))
+    )
 }
 
 export const dataResetTC = (): AppThunkType => dispatch => {
