@@ -22,6 +22,12 @@ export const LinksChecker = React.memo(() => {
     dispatch(setLinksAC(links))
   },[dispatch])
 
+  const handleKeyPress = useCallback((e: React.KeyboardEvent<HTMLDivElement>) => {
+    if(e.key === 'Enter'){
+      dispatch(statusCodeTC(links, project) as any)
+    }
+  }, [dispatch, links, project])
+
   const addItem = useCallback(() => {
     dispatch(statusCodeTC(links, project) as any)
   },[dispatch, links, project])
@@ -47,6 +53,7 @@ export const LinksChecker = React.memo(() => {
                 rows={12}
                 defaultValue={links}
                 onChange={setItems}
+                onKeyDown={handleKeyPress}
               />
             </div>
           </Box>
