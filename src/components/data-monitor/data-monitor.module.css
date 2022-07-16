@@ -3,6 +3,10 @@
     margin: 50px 50px 20px 20px;
 }
 
+.urlColumn {
+    word-spacing: 9px;
+}
+
 .buttons {
     display: flex;
 }

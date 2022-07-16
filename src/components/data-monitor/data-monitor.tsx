@@ -102,8 +102,13 @@ export const DataMonitor = React.memo(() => {
                 <TableCell component="th" scope="row">
                   {row.name}
                 </TableCell>
-                <TableCell align="right">{entities.map((entity, index) => <p
-                  key={index}>{entity}</p>)}</TableCell>
+                <TableCell align="right">{entities.map((entity, index) => <p className={styles.urlColumn}
+                  key={index}>{entity}&nbsp;
+                  <a href={entity} target="_blank"><i className="fa fa-external-link" aria-hidden="true" ></i></a>
+                  &nbsp;
+                  <a href={`https://www.google.com/search?q=${entity}`} target="_blank"><i className="fa fa-google" aria-hidden="true" ></i></a>
+                </p>)}
+                </TableCell>
                 <TableCell
                   align="right">{statusCodes.map((status, index) => status === 200 ?
                   <p key={index}>{status}</p> : <p key={index}
