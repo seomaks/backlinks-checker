@@ -9,7 +9,7 @@ import {
   TableHead,
   TableRow
 } from "@mui/material";
-import {useDispatch, useSelector} from "react-redux";
+import {useSelector} from "react-redux";
 import {AppRootStateType} from "../../state/store";
 import {
   dataResetTC,
@@ -17,9 +17,10 @@ import {
   StatusCodesType
 } from "../../state/app-reducer";
 import {utils, writeFile} from "xlsx";
+import {useAppDispatch} from "../../hooks/hooks";
 
 export const DataMonitor = React.memo(() => {
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
   const entities = useSelector<AppRootStateType, EntitiesType>(state => state.app.entities)
   const statusCodes = useSelector<AppRootStateType, StatusCodesType>(state => state.app.statusCodes)
   const liveLinks = useSelector<AppRootStateType, EntitiesType>(state => state.app.liveLinks)
@@ -63,7 +64,7 @@ export const DataMonitor = React.memo(() => {
   }, [entities, statusCodes, liveLinks, isIndexing])
 
   const handleReset = () => {
-    dispatch(dataResetTC() as any)
+    dispatch(dataResetTC())
   }
 
   return (
@@ -104,9 +105,9 @@ export const DataMonitor = React.memo(() => {
                 </TableCell>
                 <TableCell align="right">{entities.map((entity, index) => <p className={styles.urlColumn}
                   key={index}>{entity}&nbsp;
-                  <a href={entity} target="_blank"><i className="fa fa-external-link" aria-hidden="true" ></i></a>
+                  <a href={entity} target="_blank" rel="noopener noreferrer"><i className="fa fa-external-link" aria-hidden="true"></i></a>
                   &nbsp;
-                  <a href={`https://www.google.com/search?q=${entity}`} target="_blank"><i className="fa fa-google" aria-hidden="true" ></i></a>
+                  <a href={`https://www.google.com/search?q=${entity}`} target="_blank" rel="noopener noreferrer"><i className="fa fa-google" aria-hidden="true"></i></a>
                 </p>)}
                 </TableCell>
                 <TableCell

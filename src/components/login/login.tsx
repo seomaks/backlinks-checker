@@ -5,12 +5,12 @@ import FormGroup from '@mui/material/FormGroup';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import {useFormik} from "formik";
-import {useDispatch} from "react-redux";
 import {LoginParamsType, loginTC} from "../../state/auth-reducer";
 import {ErrorSnackbar} from "../error-snackbar/error-snackbar";
+import {useAppDispatch} from "../../hooks/hooks";
 
 export const Login = () => {
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
 
   const formik = useFormik({
     initialValues: {

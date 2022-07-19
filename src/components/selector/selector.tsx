@@ -2,12 +2,13 @@ import React, {ChangeEvent} from "react";
 import {FormControl, InputLabel} from "@material-ui/core";
 import {NativeSelect} from "@mui/material";
 import styles from "../selector/selector.module.css";
-import {useDispatch, useSelector} from "react-redux";
+import {useSelector} from "react-redux";
 import {AppRootStateType} from "../../state/store";
 import {setProjectAC} from "../../state/app-reducer";
+import {useAppDispatch} from "../../hooks/hooks";
 
 export const Selector = React.memo(() => {
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
   const project = useSelector<AppRootStateType, string>(state => state.app.project)
 
   const switchProject = (e: ChangeEvent<HTMLSelectElement>) => {
