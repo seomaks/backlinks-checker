@@ -88,7 +88,7 @@ export const DataMonitor = React.memo(() => {
           <TableHead>
             <TableRow>
               <TableCell><b>Check your result</b></TableCell>
-              <TableCell align="right">URL</TableCell>
+              <TableCell align="right" style={{ width: "65%" }}>URL</TableCell>
               <TableCell align="right">Status code</TableCell>
               <TableCell align="right">Link</TableCell>
               <TableCell align="right">Google Index</TableCell>

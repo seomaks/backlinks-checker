@@ -83,17 +83,18 @@ export const statusCodeTC = (links: EntitiesType, project: string): AppThunkType
     .then(res => {
       const arr: any = []
       res.map(res => {
-        if (res.data.contents === undefined) {
-          return arr.push('Nope 🤬')
+        if (!res.data.contents) {
+          return arr.push('Error 🤬')
         } else if (res.data.contents.includes((project))) {
           return arr.push('Yep 😁')
         } else {
           return arr.push('Nope 🤬')
         }
       })
+  //    dispatch(setEntitiesAC(res.map(res => res.data.status.url || 'UNKNOWN 😮')))
+      dispatch(setEntitiesAC(links))
+      dispatch(setStatusCodeAC(res.map(res => res.data.status.http_code || 0)))
       dispatch(liveLinksAC(arr))
-      dispatch(setStatusCodeAC(res.map(res => res.data.status.http_code)))
-      dispatch(setEntitiesAC(res.map(res => res.data.status.url)))
     })
     .catch(err => {
       dispatch(setAppErrorAC(err.message))
