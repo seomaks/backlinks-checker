@@ -85,7 +85,7 @@ export const DataMonitor = React.memo(() => {
         </Button>
         </div>
       </div>
-      <div><p>limits: {limits}</p></div>
+        <div><p>limits: {limits !== null && limits.length <=2 ? <b className={styles.limits}>{limits}</b> : <b>{limits}</b>}</p></div>
       </div>
       <TableContainer component={Paper}>
         <Table sx={{minWidth: 650, tableLayout: "fixed"}} aria-label="simple table">

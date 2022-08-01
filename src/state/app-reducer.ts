@@ -129,8 +129,9 @@ export const statusCodeTC = (links: EntitiesType, project: string): AppThunkType
     )
     .catch(err => {
       dispatch(setAppErrorAC(err.message))
+      dispatch(isStatusAC('failed'))
     })
-    .finally(() => dispatch(isStatusAC('succeeded'))
+    .then(() => dispatch(isStatusAC('succeeded'))
     )
 }
 

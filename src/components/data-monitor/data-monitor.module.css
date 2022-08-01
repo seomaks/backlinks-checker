@@ -53,6 +53,10 @@
     padding: 5px;
 }
 
+.limits {
+    color: red;
+}
+
 .buttons {
     display: flex;
 }
