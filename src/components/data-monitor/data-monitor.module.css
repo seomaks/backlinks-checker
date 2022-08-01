@@ -3,6 +3,11 @@
     margin: 50px 50px 20px 20px;
 }
 
+.header {
+    display: flex;
+    justify-content: space-between;
+}
+
 .urlColumn {
     word-spacing: 9px;
 }

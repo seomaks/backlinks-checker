@@ -21,7 +21,8 @@ beforeEach(() => {
     statusCodes: [200, 200, 200, 200],
     isIndexing: ['Yep 😁', 'Yep 😁', 'Yep 😁', 'Nope 🤬'],
     liveLinks: ['Yep 😁', 'Yep 😁', 'Yep 😁', 'Nope 🤬'],
-    error: 'error'
+    error: 'error',
+    limits: '100'
   };
 });
 

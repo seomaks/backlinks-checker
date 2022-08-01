@@ -25,6 +25,7 @@ export const DataMonitor = React.memo(() => {
   const statusCodes = useSelector<AppRootStateType, StatusCodesType>(state => state.app.statusCodes)
   const liveLinks = useSelector<AppRootStateType, EntitiesType>(state => state.app.liveLinks)
   const isIndexing = useSelector<AppRootStateType, EntitiesType>(state => state.app.isIndexing)
+  const limits = useSelector<AppRootStateType, null | string>(state => state.app.limits)
 
   const data: Array<any> = [{
     entities,
@@ -69,6 +70,7 @@ export const DataMonitor = React.memo(() => {
 
   return (
     <div className={styles.dataMonitor}>
+      <div className={styles.header}>
       <div className={styles.buttons}>
         <div className={styles.button}>
         <Button variant="contained" onClick={handleExport}
@@ -82,6 +84,8 @@ export const DataMonitor = React.memo(() => {
           Clean
         </Button>
         </div>
+      </div>
+      <div><p>limits: {limits}</p></div>
       </div>
       <TableContainer component={Paper}>
         <Table sx={{minWidth: 650, tableLayout: "fixed"}} aria-label="simple table">

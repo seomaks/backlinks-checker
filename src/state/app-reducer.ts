@@ -12,6 +12,7 @@ const initialState = {
   isIndexing: [] as EntitiesType,
   liveLinks: [] as EntitiesType,
   error: null as ErrorType,
+  limits: '' as null | string
 }
 
 export const appReducer = (state: InitialStateType = initialState, action: AppActionsType): InitialStateType => {
@@ -32,6 +33,8 @@ export const appReducer = (state: InitialStateType = initialState, action: AppAc
       return {...state, liveLinks: [...action.liveLinks]}
     case 'APP/SET-ERROR':
       return {...state, error: action.error}
+    case 'APP/CHECK-LIMITS':
+      return {...state, limits: action.limits}
     default:
       return state
   }
@@ -63,6 +66,10 @@ export const setAppErrorAC = (error: ErrorType) => ({
   type: 'APP/SET-ERROR',
   error
 } as const)
+export const checkLimitsAC = (limits: null | string) => ({
+  type: 'APP/CHECK-LIMITS',
+  limits
+} as const)
 
 // thunks
 export const statusCodeTC = (links: EntitiesType, project: string): AppThunkType => async dispatch => {
@@ -75,7 +82,11 @@ export const statusCodeTC = (links: EntitiesType, project: string): AppThunkType
 
   let googleRequest = await searchAPI.getRequest(links)
     .then(results => results.map(response => response
-        .then(res => res)
+        .then(res => {
+          console.log(res.headers["x-ratelimit-search-remaining"])
+          dispatch(checkLimitsAC(res.headers["x-ratelimit-search-remaining"]))
+          return res
+        })
       )
     )
 
@@ -91,7 +102,6 @@ export const statusCodeTC = (links: EntitiesType, project: string): AppThunkType
           return arr.push('Nope 🤬')
         }
       })
-  //    dispatch(setEntitiesAC(res.map(res => res.data.status.url || 'UNKNOWN 😮')))
       dispatch(setEntitiesAC(links))
       dispatch(setStatusCodeAC(res.map(res => res.data.status.http_code || 0)))
       dispatch(liveLinksAC(arr))
@@ -147,6 +157,7 @@ export type SetStatusCodeActionType = ReturnType<typeof setStatusCodeAC>
 export type CheckIndexingActionType = ReturnType<typeof checkIndexingAC>
 export type LiveLinksActionType = ReturnType<typeof liveLinksAC>
 export type SetAppErrorActionType = ReturnType<typeof setAppErrorAC>
+export type CheckLimitsActionType = ReturnType<typeof checkLimitsAC>
 export type AppActionsType =
   SetStatusCodeActionType
   | SetLinksActionType
@@ -157,3 +168,4 @@ export type AppActionsType =
   | LiveLinksActionType
   | SetAppErrorActionType
   | AuthActionsType
+  | CheckLimitsActionType
