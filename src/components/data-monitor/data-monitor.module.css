@@ -7,6 +7,47 @@
     word-spacing: 9px;
 }
 
+.entity {
+    display: inline-flex;
+    overflow: hidden;
+    white-space: nowrap;
+    padding: 5px;
+    width: 80%;
+}
+
+.status {
+    display: grid;
+    padding: 5px;
+}
+
+.redStatus {
+    color: red;
+    display: grid;
+    padding: 5px;
+}
+
+.link {
+    display: grid;
+    padding: 5px;
+}
+
+.redLink {
+    color: red;
+    display: grid;
+    padding: 5px;
+}
+
+.index {
+    display: grid;
+    padding: 5px;
+}
+
+.redIndex {
+    color: red;
+    display: grid;
+    padding: 5px;
+}
+
 .buttons {
     display: flex;
 }

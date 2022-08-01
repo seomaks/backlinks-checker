@@ -84,14 +84,14 @@ export const DataMonitor = React.memo(() => {
         </div>
       </div>
       <TableContainer component={Paper}>
-        <Table sx={{minWidth: 650}} aria-label="simple table">
+        <Table sx={{minWidth: 650, tableLayout: "fixed"}} aria-label="simple table">
           <TableHead>
             <TableRow>
-              <TableCell><b>Check your result</b></TableCell>
-              <TableCell align="right" style={{ width: "65%" }}>URL</TableCell>
-              <TableCell align="right">Status code</TableCell>
-              <TableCell align="right">Link</TableCell>
-              <TableCell align="right">Google Index</TableCell>
+              <TableCell style={{ width: "5%" }}><b>Check your result</b></TableCell>
+              <TableCell align="right" style={{ width: "60%" }}>URL</TableCell>
+              <TableCell align="right" style={{ width: "10%" }}>Status code</TableCell>
+              <TableCell align="right" style={{ width: "10%" }}>Link</TableCell>
+              <TableCell align="right" style={{ width: "10%" }}>Google Index</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -103,25 +103,27 @@ export const DataMonitor = React.memo(() => {
                 <TableCell component="th" scope="row">
                   {row.name}
                 </TableCell>
-                <TableCell align="right">{entities.map((entity, index) => <p className={styles.urlColumn}
-                  key={index}>{entity}&nbsp;
+                <TableCell align="right">{entities.map((entity, index) =><p className={styles.urlColumn}
+                                                                             key={index}><span className={styles.entity}>{entity}</span>&nbsp;
+                  <span>
                   <a href={entity} target="_blank" rel="noopener noreferrer"><i className="fa fa-external-link" aria-hidden="true"></i></a>
                   &nbsp;
                   <a href={`https://www.google.com/search?q=${entity}`} target="_blank" rel="noopener noreferrer"><i className="fa fa-google" aria-hidden="true"></i></a>
+                </span>
                 </p>)}
                 </TableCell>
                 <TableCell
                   align="right">{statusCodes.map((status, index) => status === 200 ?
-                  <p key={index}>{status}</p> : <p key={index}
-                                                   style={{color: "red"}}>{status}</p>)}</TableCell>
+                  <p key={index} className={styles.status}>{status}</p> : <p key={index}
+                                                                             className={styles.redStatus}>{status}</p>)}</TableCell>
                 <TableCell
                   align="right">{liveLinks.map((link, index) => link === 'Yep 😁' ?
-                  <p key={index}>{link}</p> :
-                  <p key={index} style={{color: "red"}}>{link}</p>)}</TableCell>
+                  <p key={index} className={styles.link}>{link}</p> :
+                  <p key={index} className={styles.redLink}>{link}</p>)}</TableCell>
                 <TableCell
                   align="right">{isIndexing.map((ind, index) => ind === 'Yep 😁' ?
-                  <p key={index}>{ind}</p> :
-                  <p key={index} style={{color: "red"}}>{ind}</p>)}</TableCell>
+                  <p key={index} className={styles.index}>{ind}</p> :
+                  <p key={index} className={styles.redIndex}>{ind}</p>)}</TableCell>
               </TableRow>
             ))}
           </TableBody>
