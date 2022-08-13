@@ -31,7 +31,7 @@ export const Login = () => {
       return errors;
     },
     onSubmit: values => {
-      dispatch(loginTC(values) as any)
+      dispatch(loginTC(values))
       formik.resetForm()
     },
   })

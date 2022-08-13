@@ -83,7 +83,6 @@ export const statusCodeTC = (links: EntitiesType, project: string): AppThunkType
   let googleRequest = await searchAPI.getRequest(links)
     .then(results => results.map(response => response
         .then(res => {
-          console.log(res.headers["x-ratelimit-search-remaining"])
           dispatch(checkLimitsAC(res.headers["x-ratelimit-search-remaining"]))
           return res
         })
