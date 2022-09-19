@@ -39,6 +39,7 @@ export const Selector = React.memo(() => {
           <option value={'mightytips.com.br'}>mightytips.com.br</option>
           <option value={'mightytips.biz'}>mightytips.biz</option>
           <option value={'mightytips.pl'}>mightytips.pl</option>
+          <option value={'mightytips.ro'}>mightytips.ro</option>
           <option value={'seobrotherslv.com'}>seobrotherslv.com</option>
           <option value={'bonusowo.com'}>bonusowo.com</option>
           <option value={'bonusowo.hu'}>bonusowo.hu</option>
