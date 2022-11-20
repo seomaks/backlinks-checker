@@ -10,6 +10,7 @@ const initialState = {
   entities: [] as EntitiesType,
   statusCodes: [] as StatusCodesType,
   isIndexing: [] as EntitiesType,
+  pageIndexing: [] as EntitiesType,
   liveLinks: [] as EntitiesType,
   error: null as ErrorType,
   limits: '' as null | string
@@ -29,6 +30,8 @@ export const appReducer = (state: InitialStateType = initialState, action: AppAc
       return {...state, statusCodes: action.statusCodes}
     case 'APP/CHECK-GOOGLE-INDEX':
       return {...state, isIndexing: [...action.isIndexing]}
+    case 'APP/CHECK-PAGE-INDEX':
+      return {...state, pageIndexing: [...action.pageIndexing]}
     case 'APP/LINK-IS-ALIVE':
       return {...state, liveLinks: [...action.liveLinks]}
     case 'APP/SET-ERROR':
@@ -58,6 +61,9 @@ export const setStatusCodeAC = (statusCodes: StatusCodesType) => ({
 } as const)
 export const checkIndexingAC = (isIndexing: EntitiesType) => ({
   type: 'APP/CHECK-GOOGLE-INDEX', isIndexing
+} as const)
+export const pageIndexingAC = (pageIndexing: EntitiesType) => ({
+  type: 'APP/CHECK-PAGE-INDEX', pageIndexing
 } as const)
 export const liveLinksAC = (liveLinks: EntitiesType) => ({
   type: 'APP/LINK-IS-ALIVE', liveLinks
@@ -90,6 +96,20 @@ export const statusCodeTC = (links: EntitiesType, project: string): AppThunkType
     )
 
   Promise.all(siteRequest)
+    .then(res => {
+      const arr: any = []
+      res.map(res => {
+        if (!res.data.contents) {
+          return arr.push('Error 🤬')
+        } else if (res.data.contents.includes('content="noindex')) {
+          return arr.push('Nope 🤬')
+        } else {
+          return arr.push('Yep 😁')
+        }
+      })
+      dispatch(pageIndexingAC(arr))
+      return res
+    })
     .then(res => {
       const arr: any = []
       res.map(res => {
@@ -155,6 +175,7 @@ export type SetLinksActionType = ReturnType<typeof setLinksAC>
 export type SetEntitiesActionType = ReturnType<typeof setEntitiesAC>
 export type SetStatusCodeActionType = ReturnType<typeof setStatusCodeAC>
 export type CheckIndexingActionType = ReturnType<typeof checkIndexingAC>
+export type PageIndexingActionType = ReturnType<typeof pageIndexingAC>
 export type LiveLinksActionType = ReturnType<typeof liveLinksAC>
 export type SetAppErrorActionType = ReturnType<typeof setAppErrorAC>
 export type CheckLimitsActionType = ReturnType<typeof checkLimitsAC>
@@ -165,6 +186,7 @@ export type AppActionsType =
   | IsStatusActionType
   | SetEntitiesActionType
   | CheckIndexingActionType
+  | PageIndexingActionType
   | LiveLinksActionType
   | SetAppErrorActionType
   | AuthActionsType

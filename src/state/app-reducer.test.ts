@@ -20,6 +20,7 @@ beforeEach(() => {
       'https://allcitynews.net/the-5-best-countries-in-soccer/]'],
     statusCodes: [200, 200, 200, 200],
     isIndexing: ['Yep 😁', 'Yep 😁', 'Yep 😁', 'Nope 🤬'],
+    pageIndexing: ['Yep 😁', 'Yep 😁', 'Yep 😁', 'Nope 🤬'],
     liveLinks: ['Yep 😁', 'Yep 😁', 'Yep 😁', 'Nope 🤬'],
     error: 'error',
     limits: '100'
