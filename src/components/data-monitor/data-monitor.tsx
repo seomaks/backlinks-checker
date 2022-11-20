@@ -39,6 +39,7 @@ export const DataMonitor = React.memo(() => {
     const headings = [[
       'URL',
       'Status code',
+      'Page indexing',
       'Link',
       'Google index'
     ]];
@@ -53,12 +54,16 @@ export const DataMonitor = React.memo(() => {
       origin: 'B2',
       skipHeader: true
     });
-    utils.sheet_add_json(ws, liveLinks.map(link => [link]), {
+    utils.sheet_add_json(ws, pageIndexing.map(index => [index]), {
       origin: 'C2',
       skipHeader: true
     });
-    utils.sheet_add_json(ws, isIndexing.map(index => [index]), {
+    utils.sheet_add_json(ws, liveLinks.map(link => [link]), {
       origin: 'D2',
+      skipHeader: true
+    });
+    utils.sheet_add_json(ws, isIndexing.map(index => [index]), {
+      origin: 'E2',
       skipHeader: true
     });
     utils.book_append_sheet(wb, ws, 'Report');
