@@ -80,6 +80,7 @@ export const checkLimitsAC = (limits: null | string) => ({
 // thunks
 export const statusCodeTC = (links: EntitiesType, project: string): AppThunkType => async dispatch => {
   dispatch(isStatusAC('loading'))
+
   let siteRequest = await getStatusAPI.getRequest(links)
     .then(results => results.map(response => response
         .then(res => res)
@@ -97,11 +98,11 @@ export const statusCodeTC = (links: EntitiesType, project: string): AppThunkType
 
   Promise.all(siteRequest)
     .then(res => {
-      const arr: any = []
+      const arr: string[] = []
       res.map(res => {
         if (!res.data.contents) {
           return arr.push('Error 🤬')
-        } else if (res.data.contents.includes('content="noindex')) {
+        } else if (res.data.contents.includes('content="noindex') || res.data.contents.includes('content="NOINDEX')) {
           return arr.push('Nope 🤬')
         } else {
           return arr.push('Yep 😁')
@@ -111,7 +112,7 @@ export const statusCodeTC = (links: EntitiesType, project: string): AppThunkType
       return res
     })
     .then(res => {
-      const arr: any = []
+      const arr: string[] = []
       res.map(res => {
         if (!res.data.contents) {
           return arr.push('Error 🤬')
@@ -126,32 +127,34 @@ export const statusCodeTC = (links: EntitiesType, project: string): AppThunkType
       dispatch(liveLinksAC(arr))
     })
     .catch(err => {
-      dispatch(setAppErrorAC(err.message))
+      dispatch(setAppErrorAC(`${err.message} (All origins)`))
+      dispatch(isStatusAC('idle'))
+      throw new Error('something went wrong')
     })
-
-  Promise.all(googleRequest)
-    .then(res => {
-        const arr: Array<string> = []
-        res.map(res => {
-          for (let y = 0; y <= res.data.results.length; y++) {
-            if (res.data.results[y] === undefined) {
-              return arr.push('Nope 🤬')
-            } else if (links.map(link => link.replace(/^https?\:\/\//i, "")).includes(res.data.results[y].link.replace(/^https?\:\/\//i, ""))) {
-              return arr.push('Yep 😁')
-            } else {
-              return arr.push('Nope 🤬')
-            }
+    .then(() => {
+      Promise.all(googleRequest)
+        .then(res => {
+            const arr: Array<string> = []
+            res.map(res => {
+              for (let y = 0; y <= res.data.results.length; y++) {
+                if (res.data.results[y] === undefined) {
+                  return arr.push('Nope 🤬')
+                } else if (links.map(link => link.replace(/^https?\:\/\//i, "")).includes(res.data.results[y].link.replace(/^https?\:\/\//i, ""))) {
+                  return arr.push('Yep 😁')
+                } else {
+                  return arr.push('Nope 🤬')
+                }
+              }
+            })
+            dispatch(checkIndexingAC(arr))
+            dispatch(isStatusAC('succeeded'))
           }
+        )
+        .catch(err => {
+          dispatch(setAppErrorAC(`${err.message} (Google Search API)`))
+          dispatch(isStatusAC('idle'))
         })
-        dispatch(checkIndexingAC(arr))
-      }
-    )
-    .catch(err => {
-      dispatch(setAppErrorAC(err.message))
-      dispatch(isStatusAC('failed'))
     })
-    .then(() => dispatch(isStatusAC('succeeded'))
-    )
 }
 
 export const dataResetTC = (): AppThunkType => dispatch => {

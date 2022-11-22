@@ -31,6 +31,7 @@ export const DataMonitor = React.memo(() => {
   const data: Array<any> = [{
     entities,
     statusCodes,
+    pageIndexing,
     liveLinks,
     isIndexing
   }]
