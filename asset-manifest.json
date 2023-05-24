@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/backlinks-checker/static/css/main.d618c1c1.css",
+    "main.js": "/backlinks-checker/static/js/main.c369ecdb.js",
+    "static/js/787.f5de709d.chunk.js": "/backlinks-checker/static/js/787.f5de709d.chunk.js",
+    "index.html": "/backlinks-checker/index.html",
+    "main.d618c1c1.css.map": "/backlinks-checker/static/css/main.d618c1c1.css.map",
+    "main.c369ecdb.js.map": "/backlinks-checker/static/js/main.c369ecdb.js.map",
+    "787.f5de709d.chunk.js.map": "/backlinks-checker/static/js/787.f5de709d.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.d618c1c1.css",
+    "static/js/main.c369ecdb.js"
+  ]
+}
